@@ -1,0 +1,33 @@
+Overview of the pipeline:
+
+input data, unlabeled
+->
+cluster (should be algorithm agnostic)
+->
+is every cluster labeled?
+no ->
+  pick a cluster, ask user to label the centroid (kmeans)
+  -> is every cluster labeled? (go back one step)
+yes ->
+  Are these all of the clusters?
+  yes -> 
+    done
+  no ->
+    add a cluster, re-start from clustering step, use labeled centroids as starting point
+
+Clustering:
+the nice way: we create a clustering class that the implementations can inherit from
+with the following methods:
+  - cluster(data, centroids, ??)
+  - labelcluster(cluster, label, ??)
+
+the not so nice way: just make a kmeans function, handle labeling in the main file
+
+Main file:
+  - takes in data
+  - keeps track of centroids
+  - (if we do the nice way) take in a clustering method
+  - increase number of clusters
+  - merge centroids if two clusters receive the same label
+  - add empty centroid if not enough clusters in clustering
+  - ??
