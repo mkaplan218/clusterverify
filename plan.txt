@@ -31,3 +31,4 @@ Main file:
   - merge centroids if two clusters receive the same label
   - add empty centroid if not enough clusters in clustering
   - ??
+
