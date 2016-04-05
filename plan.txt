@@ -31,4 +31,14 @@ Main file:
   - merge centroids if two clusters receive the same label
   - add empty centroid if not enough clusters in clustering
   - ??
+  - pixel viewing method
+
+
+########
+WHAT KMEANS NEEDS TO DO
+
+- kmeans needs a distance function to operate on the binary representation of pixel array
+- initially, run kmeans with only one parameter e.g. kmeans(k=8)
+- when we have 8 clusters and have human-labeled centroids, say we need one more cluster, we run kmeans(k=9) and then all clusters with 1 labeled data point are already labeled, human input for the rest (ideally only 1 more)
+- pretty much the same process if we want to remove a cluster -> run kmeans(k=7)
 
