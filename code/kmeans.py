@@ -42,7 +42,7 @@ def find_initial_centroids(data, k):
       if (new_i == None) or (total_distance > max_distance):
         new_i = i
         max_distance = total_distance
-    centroids.append(data.pop(i))
+    centroids.append(data.pop(new_i))
     
   return centroids
 
