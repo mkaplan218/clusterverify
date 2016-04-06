@@ -2,6 +2,8 @@ from random import randint
 from copy import deepcopy
 
 from parse import parse
+from display import display_matrix
+from display import to_matrix
 
 #In this file, I am assuming that the 6 metadata entries at the front of each
 #  raw data point hae been stripped off during initial parsing.
@@ -27,7 +29,7 @@ def find_initial_centroids(data, k):
   data = deepcopy(data)
 
   centroids = []
-  initial = randint(0, len(data - 1))
+  initial = randint(0, len(data) - 1)
   
   if k > 0:
     centroids.append(data[initial])
@@ -68,8 +70,8 @@ def centroids_equal(old, new):
   assert((len(old) > 0) and (len(old) == len(new)))
   assert(len(old[0]) == len(new[0]))
 
-  for i in len(old):
-    for j in len(old[i]):
+  for i in range(len(old)):
+    for j in range(len(old[i])):
       if (old[i][j] != new[i][j]):
         return False
 
@@ -100,11 +102,14 @@ def fit(data, centroids):
 
 def cluster(data, k):
   old_centroids = find_initial_centroids(data, k)
+  count = 0
   while True: #scary, whatever yolo
     clusters = fit(data, old_centroids)
     new_centroids = [find_centroid(clusters[x]) for x in range(len(clusters))]
     if centroids_equal(old_centroids, new_centroids):
       break
+    else:
+      old_centroids = new_centroids
        
   return new_centroids
 

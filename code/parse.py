@@ -1,5 +1,18 @@
+def parse(data, rows, cols):
+  assert(len(data) == rows*cols)
+
+  M = []
+  for row in xrange(rows):
+    new_row = []
+    for col in xrange(cols):
+      new_row.append(int(data[row*cols + col]))
+    M.append(new_row)
+
+  return M
+  
+
 #Parse a matrix out of a line of input from our data
-def parse(input, rows, cols):
+def parse_raw(input, rows, cols):
   raw = input.split(" ")
 
   id = raw[0]
@@ -10,13 +23,4 @@ def parse(input, rows, cols):
   fold = raw[5]
   raw_data = raw[6:]
 
-  assert(len(raw_data) == rows*cols)
-
-  M = []
-  for row in xrange(rows):
-    new_row = []
-    for col in xrange(cols):
-      new_row.append(int(raw_data[row*cols + col]))
-    M.append(new_row)
-  
-  return (M, id, letter, next_id, word_id, position, fold)
+  return (parse(raw_data, rows, cols), id, letter, next_id, word_id, position, fold)
