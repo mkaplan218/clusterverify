@@ -21,3 +21,22 @@ def display_matrix(M, title = ""):
         new_row += ". "
     print(new_row)
   print
+
+def display_char(ls, rows, cols, title = ''):
+  if len(title) > 0:
+    print("Printing character: " + title + "\n")
+
+  # debug:
+  print(ls)
+
+  for i in xrange(rows):
+    new_row = ""
+    for j in xrange(cols):
+      col = ls[i * cols + j]
+      if col == 1:
+        new_row += "@ "
+      else:
+        new_row += ". "
+    print(new_row)
+  print
+

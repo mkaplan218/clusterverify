@@ -30,9 +30,11 @@ def find_initial_centroids(data, k):
 
   centroids = []
   initial = randint(0, len(data) - 1)
-  
+
   if k > 0:
     centroids.append(data[initial])
+    # JFarr, do I need this following line here? the append and pop are used together below
+    data.pop(initial)
 
   while (len(centroids) < k):
     new_i = None
@@ -45,7 +47,7 @@ def find_initial_centroids(data, k):
         new_i = i
         max_distance = total_distance
     centroids.append(data.pop(new_i))
-    
+
   return centroids
 
 #Finds the representative centroid of a subset of data, based on the most
@@ -70,13 +72,13 @@ def centroids_equal(old, new):
   assert((len(old) > 0) and (len(old) == len(new)))
   assert(len(old[0]) == len(new[0]))
 
-  for i in range(len(old)):
-    for j in range(len(old[i])):
+  for i in xrange(len(old)):
+    for j in xrange(len(old[i])):
       if (old[i][j] != new[i][j]):
         return False
 
   return True
-    
+
 
 #partitions the data into the sets closest to each centroid
 
@@ -84,12 +86,12 @@ def fit(data, centroids):
   k = len(centroids)
 
   #Maps the index of a centroid to the set of points closest to it
-  clusters = {x: [] for x in range(k)}
+  clusters = {x: [] for x in xrange(k)}
 
   for point in data:
     min_d = None
     best = None
-    for i in range(k):
+    for i in xrange(k):
       d = distance(point, centroids[i])
       if ((min_d == None) or (d < min_d)):
         min_d = d
@@ -100,17 +102,25 @@ def fit(data, centroids):
 
 #returns k centroids which partition the data optimally into k clusters
 
-def cluster(data, k):
+# low maxiter for now while we test
+def cluster(data, k, maxiter = 100):
+  print 'clustering'
   old_centroids = find_initial_centroids(data, k)
-  count = 0
+  print 'found initial centroids'
+  it = 0
   while True: #scary, whatever yolo
     clusters = fit(data, old_centroids)
-    new_centroids = [find_centroid(clusters[x]) for x in range(len(clusters))]
-    if centroids_equal(old_centroids, new_centroids):
+    new_centroids = [find_centroid(clusters[x]) for x in xrange(len(clusters))]
+    if it >= maxiter or centroids_equal(old_centroids, new_centroids):
+      print 'converged on', it
       break
     else:
       old_centroids = new_centroids
-       
+
+    if it % 10 == 0:
+      print 'centroids have not yet converged', it
+    it += 1
+
   return new_centroids
 
 
