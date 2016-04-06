@@ -38,6 +38,8 @@ def main(args):
 
   clusters = cluster(subset, args.m, args.k)
 
+  write_clusters(clusters, args.o)
+
   # nothing else went wrong
   print 'Exiting nicely!'
   return 0
@@ -49,7 +51,16 @@ def init_parser():
       help = 'Method of clustering (default is KMeans)')
   parser.add_argument('-k', default = '2', type = int,
       help = 'Initial number of clusters (default is 2)')
+  parser.add_argument('-o', default = 'out.data',
+      help = 'Output file for clustered labels')
   return parser
+
+def write_clusters(clusters, outfile):
+  output = open(outfile, 'w')
+  for elem in clusters:
+    output.write(str(elem))
+    output.write('\n')
+  return 0
 
 def cluster(data, method, k):
   print 'clustering with method: ', method, ' and k: ', k
@@ -58,6 +69,9 @@ def cluster(data, method, k):
   human_needed = True
   while human_needed:
     if method == 'kmeans':
+      duplicates = False
+      unique_labels = []
+      # TODO: move all of this out into a separate function
       # 1. cluster with kmeans
       centroids = kmeans.cluster(data, k)
 
@@ -73,6 +87,11 @@ def cluster(data, method, k):
           # save point with label to labeled_points
           human_points.append(cent)
           human_labels.append(label)
+          if label not in unique_labels:
+            unique_labels.append(label)
+          else:
+            k -= 1
+            duplicates = True
           # unhashable type...
           #human[cent] = label
 
@@ -80,12 +99,15 @@ def cluster(data, method, k):
           # how to check for duplicates?
 
       # 3. ask if there needs to be more clusters
-      more = raw_input('Is this enough clusters? (yes/no): ')
-      if more == 'no':
-        k += 1
+      if not duplicates:
+        more = raw_input('Is this enough clusters? (yes/no): ')
+        if more == 'no':
+          k += 1
+        else:
+          human_needed = False
+          clusters = kmeans.fit(data, centroids)
       else:
-        human_needed = False
-        clusters = kmeans.fit(data, centroids)
+        print 'Removing duplicate clusters'
 
     else:
       # who knows what will go here? long-term goals

@@ -33,7 +33,6 @@ def find_initial_centroids(data, k):
 
   if k > 0:
     centroids.append(data[initial])
-    # JFarr, do I need this following line here? the append and pop are used together below
     data.pop(initial)
 
   while (len(centroids) < k):
@@ -86,6 +85,24 @@ def fit(data, centroids):
   k = len(centroids)
 
   #Maps the index of a centroid to the set of points closest to it
+  clusters = []
+
+  for point in data:
+    min_d = None
+    best = None
+    for i in xrange(k):
+      d = distance(point, centroids[i])
+      if ((min_d == None) or (d < min_d)):
+        min_d = d
+        best = i
+    clusters.append(best)
+
+  return clusters
+
+def fit_to_dict(data, centroids):
+  k = len(centroids)
+
+  #Maps the index of a centroid to the set of points closest to it
   clusters = {x: [] for x in xrange(k)}
 
   for point in data:
@@ -109,7 +126,7 @@ def cluster(data, k, maxiter = 100):
   print 'found initial centroids'
   it = 0
   while True: #scary, whatever yolo
-    clusters = fit(data, old_centroids)
+    clusters = fit_to_dict(data, old_centroids)
     new_centroids = [find_centroid(clusters[x]) for x in xrange(len(clusters))]
     if it >= maxiter or centroids_equal(old_centroids, new_centroids):
       print 'converged on', it
