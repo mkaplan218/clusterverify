@@ -27,10 +27,10 @@ def find_initial_centroids(data, k):
   data = deepcopy(data)
 
   centroids = []
-  i = randint(0, len(data - 1))
+  initial = randint(0, len(data - 1))
   
   if k > 0:
-    centroids.append(data[i])
+    centroids.append(data[initial])
 
   while (len(centroids) < k):
     new_i = None
