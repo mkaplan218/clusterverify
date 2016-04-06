@@ -3,6 +3,22 @@ from parse import parse
 from parse import parse_raw
 from kmeans import cluster
 
+#gettin' real jank up in here
+def data_from_file(filename):
+  data = []
+  f = open(filename)
+  while True:
+    new_line = f.readline()
+    if new_line == '': break
+    new_line = new_line.split(" ")
+    new_line[-1] = new_line[-1].strip('\n')
+    if (len(new_line) > 1):
+      new_row = []
+      for x in new_line:
+        new_row.append(int(x))
+      data.append(new_row)
+  return data
+
 def test_display_matrix():
   z_test = [[1, 1, 1], [0, 0, 1], [0, 1, 0], [1, 0, 0], [1, 1, 1]]
   display_matrix(z_test, title = "Test - Z")
@@ -41,9 +57,14 @@ def test_cluster_5x5():
   
   for c in centroids:
     display_matrix(parse(c, 5, 5))
-  
+
+def test_cluster_simple():
+  centroids = cluster(data_from_file("../data/test.data"), 3)
+  for c in centroids:
+    display_matrix(parse(c, 4, 2))
 
 def test_all():
   test_display_matrix()
   test_display_data()
   test_cluster_5x5()
+  test_cluster_simple()
