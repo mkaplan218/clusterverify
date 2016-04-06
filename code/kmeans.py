@@ -62,13 +62,50 @@ def find_centroid(data):
 
   return centroid
 
+#Compares two sets of points for equality
+
+def centroids_equal(old, new):
+  assert((len(old) > 0) and (len(old) == len(new)))
+  assert(len(old[0]) == len(new[0]))
+
+  for i in len(old):
+    for j in len(old[i]):
+      if (old[i][j] != new[i][j]):
+        return False
+
+  return True
+    
+
 #partitions the data into the sets closest to each centroid
 
 def fit(data, centroids):
-  pass
+  k = len(centroids)
+
+  #Maps the index of a centroid to the set of points closest to it
+  clusters = {x: [] for x in range(k)}
+
+  for point in data:
+    min_d = None
+    best = None
+    for i in range(k):
+      d = distance(point, centroids[i])
+      if ((min_d == None) or (d < min_d)):
+        min_d = d
+        best = i
+    clusters[best].append(point)
+
+  return clusters
 
 #returns k centroids which partition the data optimally into k clusters
 
 def cluster(data, k):
-  centroids = find_initial_centroids(data, k)
-  
+  old_centroids = find_initial_centroids(data, k)
+  while True: #scary, whatever yolo
+    clusters = fit(data, old_centroids)
+    new_centroids = [find_centroid(clusters[x]) for x in range(len(clusters))]
+    if centroids_equal(old_centroids, new_centroids):
+      break
+       
+  return new_centroids
+
+
