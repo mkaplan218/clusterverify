@@ -24,13 +24,13 @@ def main(args):
 
   n = len(labels)
 
-  subset = [data[x] for x in xrange(0, n) if labels[x] == 'c' or labels[x] == 'x']
+  subset = data #[data[x] for x in xrange(0, n) if labels[x] in 'abc']
   print 'labels: ', len(labels)
 
   counts = {}
   for elem in labels:
     if elem not in counts:
-      counts[elem] = 0
+      counts[elem] = 1
     else:
       counts[elem] += 1
   print counts
@@ -100,7 +100,7 @@ def cluster(data, method, k):
 
       # 3. ask if there needs to be more clusters
       if not duplicates:
-        more = raw_input('Is this enough clusters? (yes/no): ')
+        more = raw_input('Is ' + str(k) + ' enough clusters? (yes/no): ')
         if more == 'no':
           k += 1
         else:
